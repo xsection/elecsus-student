@@ -422,3 +422,22 @@ def test_ninety_degrees_is_crossed_only_for_x_polarised_light():
         return np.array(st['total']['S0'])[5]
     assert after_both('Linear (x)') < 1e-6          # crossed
     assert after_both('Linear (y)') > 0.5           # the polariser passes y-light
+
+
+# --- the header gives the version, and says a pre-release is not final (SAW, 2026-10-28)
+
+@pytest.mark.parametrize('version, note', [
+    ('4.0.0b1', 'v4.0.0b1 · beta, not the final release'),
+    ('4.0.0a3', 'v4.0.0a3 · alpha, not the final release'),
+    ('4.0.0rc2', 'v4.0.0rc2 · release candidate, not the final release'),
+    ('4.1.0.dev3', 'v4.1.0.dev3 · development version, not the final release'),
+    ('4.0.0', 'v4.0.0'), ('4.0.1.post1', 'v4.0.1.post1'),
+    ('0+unknown', ''),                  # a source tree that was never installed
+])
+def test_the_release_note_follows_the_version(version, note):
+    assert gui._release_note(version) == note
+
+
+def test_the_header_shows_the_installed_version():
+    [line] = [c for c in _walk(gui.app.layout) if getattr(c, 'id', None) == 'release-note']
+    assert line.children == gui._release_note(gui.__version__)

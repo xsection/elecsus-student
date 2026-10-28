@@ -52,6 +52,7 @@ import dash_bootstrap_components as dbc
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
+from elecsus import __version__
 from elecsus.elecsus_methods import calculate, fit_data, _fit_form
 from elecsus.libs.param_validation import FIT_LIMITS
 from elecsus.libs.BufferGasData import BUFFER_GAS_DATA
@@ -945,12 +946,30 @@ app = dash.Dash(
 server = app.server
 
 # ── Header ────────────────────────────────────────────────────────────────────
+_STAGES = {'a': 'alpha', 'b': 'beta', 'rc': 'release candidate',
+           '.dev': 'development version'}
+
+
+def _release_note(version):
+    """The line under the title: the version, and for a pre-release (4.0.0b1,
+    4.0.0rc2, 4.0.0.dev3) that it is not the final release. Nothing for a
+    source tree that was never installed, which has no version."""
+    if 'unknown' in version:
+        return ''
+    stage = re.match(r'\d+(?:\.\d+)*(a|b|rc|\.dev)\d', version)
+    if stage:
+        return f'v{version} · {_STAGES[stage[1]]}, not the final release'
+    return f'v{version}'
+
+
 header = html.Div([
     html.Div([
         html.H1('ElecSus', style={'color':HIGHLIGHT,'fontWeight':'700','margin':'0',
                                    'fontSize':'1.7rem','letterSpacing':'-0.02em'}),
         html.P('Atomic Spectroscopy · Durham QLM',
                style={'color':SUBTEXT,'margin':'0','fontSize':'0.82rem'}),
+        html.P(_release_note(__version__), id='release-note',
+               style={'color':WARN_COLOUR,'margin':'0','fontSize':'0.78rem'}),
     ]),
 ], style={'padding':'12px 24px','backgroundColor':PANEL,
           'borderBottom':f'2px solid {HIGHLIGHT}'})

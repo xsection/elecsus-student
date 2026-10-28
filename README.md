@@ -1,5 +1,11 @@
 # ElecSus v4
 
+> **Pre-release: ElecSus 4.0.0b1 (beta).** This is a test copy, not the
+> final release. The code, its interface and its defaults may still change,
+> and the documentation is incomplete. Please do not pass it on, or publish
+> results from it, without asking whoever gave you this copy first; report
+> problems to them too.
+
 **ElecSus** calculates the electric susceptibility, refractive index, and transmission
 spectra of thermal alkali-metal vapour cells on the D-lines. It includes least-squares
 fitting routines for extracting experimental parameters from spectroscopic data.
